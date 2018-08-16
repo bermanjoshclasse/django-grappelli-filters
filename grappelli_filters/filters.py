@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.contrib.contenttypes.models import ContentType
 
 
 class AbstractFieldListFilter(admin.FieldListFilter):
-    tempalte = ''
     filter_parameter = None
     url_parameter = None
 
@@ -57,12 +55,14 @@ class RelatedAutocompleteFilter(AbstractFieldListFilter):
         return u'{0}__id__exact'.format(field_path)
 
     def __init__(self, field, request, params, model, model_admin, field_path):
+        from django.contrib.contenttypes.models import ContentType
+
         super(RelatedAutocompleteFilter, self).__init__(field, request, params, model, model_admin, field_path)
         if self.model:
             content_type = ContentType.objects.get_for_model(self.model)
         else:
-            content_type = ContentType.objects.get_for_model(field.rel.to)
-        self.grappelli_trick = u'/{app_label}/{model_name}/'.format(
+            content_type = ContentType.objects.get_for_model(field.remote_field.model)
+        self.grappelli_trick = u'/{app_label}/{model_name}/?_to_field=id'.format(
             app_label=content_type.app_label,
             model_name=content_type.model
         )
