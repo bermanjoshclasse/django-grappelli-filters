@@ -19,10 +19,6 @@ class AbstractFieldListFilter(admin.FieldListFilter):
         """ Whether to show filter """
         return True
 
-    def lookups(self, request, model_admin):
-        """ Not using lookups """
-        return ()
-
     def choices(self, cl):
         """ Not used, but required by admin_list_filter template tag """
         return ()
@@ -52,7 +48,7 @@ class RelatedAutocompleteFilter(AbstractFieldListFilter):
     def get_parameter_name(self, field_path):
         if self.url_parameter:
             field_path = self.url_parameter
-        return u'{0}__id__exact'.format(field_path)
+        return '{0}__id__exact'.format(field_path)
 
     def __init__(self, field, request, params, model, model_admin, field_path):
         from django.contrib.contenttypes.models import ContentType
@@ -62,7 +58,7 @@ class RelatedAutocompleteFilter(AbstractFieldListFilter):
             content_type = ContentType.objects.get_for_model(self.model)
         else:
             content_type = ContentType.objects.get_for_model(field.remote_field.model)
-        self.grappelli_trick = u'/{app_label}/{model_name}/?_to_field=id'.format(
+        self.grappelli_trick = '/{app_label}/{model_name}/?_to_field=id'.format(
             app_label=content_type.app_label,
             model_name=content_type.model
         )
@@ -72,12 +68,11 @@ class SearchFilter(AbstractFieldListFilter):
     template = 'grappelli_filters/search.html'
 
     def get_parameter_name(self, field_path):
-        return u'{0}__icontains'.format(field_path)
+        return '{0}__icontains'.format(field_path)
 
 
 class SearchFilterC(SearchFilter):
     """ Case-sensitive serach filter """
 
     def get_parameter_name(self, field_path):
-        return u'{0}__contains'.format(field_path)
-
+        return '{0}__contains'.format(field_path)
