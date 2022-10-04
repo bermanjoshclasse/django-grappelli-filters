@@ -73,4 +73,4 @@
             return url;
         }
     });
-})(django.jQuery);
+})(grp.jQuery);
